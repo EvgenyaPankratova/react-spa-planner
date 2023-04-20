@@ -20,6 +20,7 @@ function Header(){
     const handleEvent = (e) => {
     e.preventDefault();
     let ev = prompt("Enter event time: YYYY-MM-DD HH-mm-ss");
+    let text = prompt("Enter event text");
     setNewEvent(ev);
     console.log(newEvent)
     

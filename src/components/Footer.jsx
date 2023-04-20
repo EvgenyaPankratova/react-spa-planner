@@ -1,7 +1,14 @@
+import styled from "styled-components";
 
-function Footer(){
+function Footer({events, actives, setActive}){
+
+    const Delete = styled.div`
+    cursor: pointer;
+    `
+
     return <>
-        Today
+        <div>Today</div>
+        <Delete onClick={() => window.confirm('Delete this event?')}>Delete</Delete>
     </>
 }
 
