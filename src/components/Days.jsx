@@ -6,12 +6,13 @@ const WeekDays = styled.ul`
 display: flex;
 justify-content: space-between;
 align-items: center;
-padding: 1rem;
-font-size: 14px;
+font-size: 12px;
 font-weight: bold;
+outline: 1px solid red;
 `
 const WeekDaysItem = styled.li`
 text-align: center;
+
 
 `
 
@@ -19,13 +20,17 @@ const Dates = styled.ul`
 display: flex;
 justify-content: space-between;
 align-items: center;
-padding: 1.2rem;
+// padding: 1.2rem;
+
 font-size: 20px;
+margin: 0 auto;
 `
 
 const DatesItem = styled.li`
 text-align: center;
-padding-left: 7px;
+padding-left: 8px;
+padding-right: 8px;
+// padding-right: 10px;
 `
 
 const Month = styled.div`
@@ -39,6 +44,12 @@ const Arrow = styled.span`
 color: red;
 font-size: 1.2rem;
 cursor: pointer;
+`
+
+const DatesWeeksWrapper = styled.div`
+display: flex;
+flex-direction: column;
+justify-content: center;
 `
 
 function Days(){
@@ -68,7 +79,7 @@ function Days(){
                 }else{
              addDays = (8 - nowWeekDay);
             }
-            newDate.setDate(addDays - date.getDate()); //получаем предыдущий понедельник    
+            newDate.setDate(8 - date.getDate()); //получаем предыдущий понедельник    
         for(let i = 0; i < 7; i++){
           
             week[i] = newDate.getDate();
@@ -82,10 +93,23 @@ function Days(){
         width: '2rem',
         height: '2rem',
         borderRadius: '50%'
+  
+    }
+    
+
+    const PlusDays = () => {
+        newDate.setDate(8 - date.getDate() + 7)
+        for(let i = 0; i < 7; i++){
+          
+            week[i] = nowWeekDay + 7;
+            newDate.setDate(newDate.getDate() + 8) ;
+            
+        }
     }
 
     return <>
 
+<DatesWeeksWrapper>
     <div>
         <WeekDays>
             {days.map((item, index) => {
@@ -101,8 +125,9 @@ function Days(){
            })}
         </Dates>
     </div>
+    </DatesWeeksWrapper>
 
-    <Month> <Arrow><MdArrowBackIosNew/></Arrow> {months[new Date().getMonth()]} {new Date().getFullYear()} <Arrow><MdArrowForwardIos/></Arrow> </Month>
+    <Month> <Arrow><MdArrowBackIosNew/></Arrow> {months[new Date().getMonth()]} {new Date().getFullYear()} <Arrow ><MdArrowForwardIos onClick={() => PlusDays}/></Arrow> </Month>
     
     </>
 }

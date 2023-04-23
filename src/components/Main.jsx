@@ -42,24 +42,25 @@ cursor: pointer;
 }
 `
 const activeSell = {
-    background: '#d4d6fa'
+    background: '#ebebfc'
+}
+
+const forDeleteSell = {
+    background: '#bab9ed'
 }
 
 
 
-const SellItem = ({ handleToggle, elem }) => {
+const SellItem = ({ handleToggle, elem}) => {
     return (
-        <Sell  onClick={() => handleToggle(elem.id)}   style={elem.isActive ? activeSell : null}></Sell>
+        <Sell   onClick={() => handleToggle(elem.id)}  style={ elem.forDelete ? forDeleteSell : elem.isActive ? activeSell : null}></Sell>
     );
   };
 
-function Main(){
+function Main({events, actives, setActive}){
    
 
-    let arr = [...Array(91)];
-    const events = arr.map(elem => ({ id: Math.random().toString(36).substring(2,9) , isActive: false }));
-
-    const [actives, setActive] = useState(events);
+   
 
     let hours = [];
     hours.lenght = 12;
@@ -77,28 +78,25 @@ function Main(){
     const handleToggle = index => {
         setActive(actives => {
             return actives.map(elem => {
-              if (elem.id === index) {
+              if (elem.id === index && elem.isActive) {
                 return {
                   ...elem,
-                  isActive: !elem.isActive
+                  isActive: !elem.isActive,
+                  forDelete: !elem.forDelete
                 };
+              }else if(elem.id === index){
+                return {
+                    ...elem,
+                    isActive: !elem.isActive,
+                  };
               }
               return elem;
             });
           });
     }
-   
 
-    // const handleToggle = id => {
-    //     const newEvents = events.filter((el) => el.id === id)
-    //     newEvents.map(elem => {
-    //         return  {
-    //                           ...elem,
-    //                           isActive: true
-    //                         };
-    //     })
-    //     setActive(newEvents)
-    // }
+
+    console.log(actives)
 
     return <MainWrapper>
     <div>
@@ -110,7 +108,7 @@ function Main(){
                 }
         </ul>
     </div>
-
+  
     <Sells>
 
         
@@ -121,8 +119,11 @@ function Main(){
         
          ) }
 
+
+
     </Sells>
     </MainWrapper>
+    
 }
 
 
