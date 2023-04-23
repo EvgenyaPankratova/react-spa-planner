@@ -66,24 +66,22 @@ function Days(){
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
     let date = new Date();
-    let newDate = new Date(date); //создание копии переданной даты
-    let week = [];
-    let nowWeekDay = date.getDay(); //получаем номер текущего дня недели
-    week.lenght = 7;
     
-        let addDays = 0; //сколько дней до понедельника
-            if(nowWeekDay === 1){
-                addDays = 0;
-            }else if(nowWeekDay === 0){
-                addDays = 1;
-                }else{
-             addDays = (8 - nowWeekDay);
-            }
-            newDate.setDate(8 - date.getDate()); //получаем предыдущий понедельник    
-        for(let i = 0; i < 7; i++){
+    let weekDay = date.getDay() - 1; //получаем номер текущего дня недели с пересчетом на начало от понед
+
+    if(weekDay === -1){ //проверка, если день недели воскр
+        weekDay = 6;
+    }
+
+    let mondayDate = new Date(date); //создание копии переданной даты
+    mondayDate.setDate(mondayDate.getDate() - weekDay);
+
+            let week = [];
+
+            for(let i = 0; i < 7; i++){
           
-            week[i] = newDate.getDate();
-            newDate.setDate(newDate.getDate() + 1) ;
+            week[i] = mondayDate.getDate();
+            mondayDate.setDate(mondayDate.getDate() + 1) ;
             
         }
 
@@ -97,15 +95,15 @@ function Days(){
     }
     
 
-    const PlusDays = () => {
-        newDate.setDate(8 - date.getDate() + 7)
-        for(let i = 0; i < 7; i++){
+    // const PlusDays = () => {
+    //     newDate.setDate(8 - date.getDate() + 7)
+    //     for(let i = 0; i < 7; i++){
           
-            week[i] = nowWeekDay + 7;
-            newDate.setDate(newDate.getDate() + 8) ;
+    //         week[i] = nowWeekDay + 7;
+    //         newDate.setDate(newDate.getDate() + 8) ;
             
-        }
-    }
+    //     }
+    // }
 
     return <>
 
@@ -127,7 +125,7 @@ function Days(){
     </div>
     </DatesWeeksWrapper>
 
-    <Month> <Arrow><MdArrowBackIosNew/></Arrow> {months[new Date().getMonth()]} {new Date().getFullYear()} <Arrow ><MdArrowForwardIos onClick={() => PlusDays}/></Arrow> </Month>
+    <Month> <Arrow><MdArrowBackIosNew/></Arrow> {months[new Date().getMonth()]} {new Date().getFullYear()} <Arrow ><MdArrowForwardIos /></Arrow> </Month>
     
     </>
 }
