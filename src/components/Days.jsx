@@ -83,6 +83,14 @@ const DatesWeeksWrapper = styled.div`
   justify-content: center;
 `;
 
+const weekStyle = {
+  color: "white",
+  background: "red",
+  width: "2rem",
+  height: "2rem",
+  borderRadius: "50%",
+};
+
 function Days() {
   const days = ["M", "T", "W", "T", "F", "S", "S"];
 
@@ -101,81 +109,47 @@ function Days() {
     "December",
   ];
 
-  let date = new Date();
+  const getMonday = (date) => {
+    let weekDay = date.getDay() - 1; //получаем номер текущего дня недели с пересчетом на начало от понед
 
-  let weekDay = date.getDay() - 1; //получаем номер текущего дня недели с пересчетом на начало от понед
+    if (weekDay === -1) {
+      //проверка, если день недели воскр
+      weekDay = 6;
+    }
 
-  if (weekDay === -1) {
-    //проверка, если день недели воскр
-    weekDay = 6;
+    let mondayDate = new Date(date); //создание копии переданной даты
+    mondayDate.setDate(mondayDate.getDate() - weekDay);
+    return mondayDate;
+  };
+
+  const getWeek = (date) => {
+    let week = new Array(7);
+
+    for (let i = 0; i < 7; i++) {
+        week[i] = new Date(date);
+        week[i].setDate(week[i].getDate() + i);
+      }
+    return week;
+  };
+
+  const changeMonday = (monday, num) => {
+    let newDate = new Date(monday)
+    newDate.setDate(newDate.getDate() + num * 7);
+    return newDate;
+  };
+
+  const handleClick = (monday, num) => {
+    let newMonday = changeMonday(monday, num)
+
+    setMondayDate(newMonday);
+    setCurrentWeek(getWeek(newMonday));
   }
 
-  let mondayDate = new Date(date); //создание копии переданной даты
-  mondayDate.setDate(mondayDate.getDate() - weekDay);
+  let currentDate = new Date();
 
-  const [week, setWeek] = useState([]);
-  const [thisMonth, setThisMonth] = useState(new Date().getMonth());
+  const [mondayDate, setMondayDate] = useState(getMonday(currentDate));
+  const [currentWeek, setCurrentWeek] = useState(getWeek(mondayDate));
 
-  let weekCopy = new Array(7);
-
-  useEffect(() => {
-    for (let i = 0; i < 7; i++) {
-      weekCopy[i] = mondayDate.getDate();
-      mondayDate.setDate(mondayDate.getDate() + 1);
-    }
-    setWeek(weekCopy);
-  }, []);
-
-  const getCurrentMonth = () => {
-    let currentDate = new Date();
-    currentDate.setDate(currentDate.getDate() + 7); //прибавляем неделю к текущей дате
-
-    let currentMonth = currentDate.getMonth();
-    return currentMonth;
-  };
-
-  const plusDays = () => {
-    let nextDate = new Date();
-
-    let thisCurrentMonth = getCurrentMonth();
-    setThisMonth(thisCurrentMonth);
-
-    let nextMondayDate = new Date();
-    nextMondayDate.setDate(nextMondayDate.getDate() + 7 - weekDay);
-
-    let nextWeekCopy = new Array(7);
-
-    for (let i = 0; i < 7; i++) {
-      nextWeekCopy[i] = nextMondayDate.getDate();
-      nextMondayDate.setDate(nextMondayDate.getDate() + 1);
-    }
-    setWeek(nextWeekCopy);
-  };
-
-  const minusDays = () => {
-    let prevDate = new Date();
-    prevDate.setMonth(prevDate.getMonth() - 1);
-    setThisMonth(prevDate.getMonth());
-
-    let prevMondayDate = new Date();
-    prevMondayDate.setDate(prevMondayDate.getDate() - 7 - weekDay);
-
-    let prevWeekCopy = new Array(7);
-
-    for (let i = 0; i < 7; i++) {
-      prevWeekCopy[i] = prevMondayDate.getDate();
-      prevMondayDate.setDate(prevMondayDate.getDate() + 1);
-    }
-    setWeek(prevWeekCopy);
-  };
-
-  const weekStyle = {
-    color: "white",
-    background: "red",
-    width: "2rem",
-    height: "2rem",
-    borderRadius: "50%",
-  };
 
   return (
     <>
@@ -190,13 +164,13 @@ function Days() {
 
         <div>
           <Dates>
-            {week.map((elem, index) => {
+            {currentWeek.map((elem, index) => {
               return (
                 <WeekDaysItem
                   key={index}
-                  style={elem === new Date().getDate() ? weekStyle : null}
+                  style={elem.toISOString() === currentDate.toISOString()? weekStyle : null}
                 >
-                  {elem}
+                  {elem.getDate()}
                 </WeekDaysItem>
               );
             })}
@@ -206,13 +180,13 @@ function Days() {
 
       <Month>
         {" "}
-        <Arrow onClick={minusDays}>
+        <Arrow onClick = {() => handleClick(mondayDate, -1)} >
           <MdArrowBackIosNew />
-        </Arrow>{" "}
-        {months[thisMonth]} {new Date().getFullYear()}{" "}
-        <Arrow onClick={plusDays}>
+        </Arrow>
+        {months[mondayDate.getMonth()]} {mondayDate.getFullYear()}
+        <Arrow  onClick = {() => handleClick(mondayDate, 1)}>
           <MdArrowForwardIos />
-        </Arrow>{" "}
+        </Arrow>
       </Month>
     </>
   );

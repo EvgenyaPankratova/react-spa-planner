@@ -2,6 +2,7 @@ import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import styled from "styled-components";
 import Days from "./components/Days";
+import Days1 from "./components/Days";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Main from "./components/Main";
